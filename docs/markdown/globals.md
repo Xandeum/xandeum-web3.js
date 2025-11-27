@@ -1,12 +1,13 @@
-[**Xandeum Web3 Library v1.12.0**](README.md)
+[**Xandeum Web3 Library v0.5.0**](README.md)
 
 ***
 
-# Xandeum Web3 Library v1.12.0
+# Xandeum Web3 Library v0.5.0
 
 ## Functions
 
 - [armageddon](functions/armageddon.md)
+- [assignCoowner](functions/assignCoowner.md)
 - [bigbang](functions/bigbang.md)
 - [copyPath](functions/copyPath.md)
 - [createDirectory](functions/createDirectory.md)
