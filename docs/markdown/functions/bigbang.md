@@ -6,19 +6,13 @@
 
 # Function: bigbang()
 
-> **bigbang**(`replica_count`, `wallet`): `Promise`\<`Transaction`\>
+> **bigbang**(`wallet`): `Promise`\<`Transaction`\>
 
-Defined in: [bigbang.ts:12](https://github.com/Xandeum/xandeum-web3.js/blob/ingolstadt/src/bigbang.ts#L12)
+Defined in: [bigbang.ts:10](https://github.com/Xandeum/xandeum-web3.js/blob/ingolstadt/src/bigbang.ts#L10)
 
 Constructs a Solana transaction that triggers the "bigbang" instruction and create new file system.
 
 ## Parameters
-
-### replica\_count
-
-`string`
-
-A stringified integer representing the number of replicas for the new file system.
 
 ### wallet
 
