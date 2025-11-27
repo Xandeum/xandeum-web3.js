@@ -1,8 +1,8 @@
-[**Xandeum Web3 Library v0.5.0**](README.md)
+[**Xandeum Web3 Library v0.6.0**](README.md)
 
 ***
 
-# Xandeum Web3 Library v0.5.0
+# Xandeum Web3 Library v0.6.0
 
 ## Functions
 

@@ -1,4 +1,4 @@
-[**Xandeum Web3 Library v0.5.0**](../README.md)
+[**Xandeum Web3 Library v0.6.0**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **move**(`fsid`, `srcPath`, `destPath`, `name`, `wallet`): `Promise`\<`Transaction`\>
 
-Defined in: [move.ts:19](https://github.com/Xandeum/xandeum-web3.js/blob/ingolstadt/src/move.ts#L19)
+Defined in: [move.ts:19](https://github.com/Xandeum/xandeum-web3.js/blob/stuttgart/src/move.ts#L19)
 
 Constructs a Solana transaction to copy a file or directory from one  path to another.
 

@@ -1,4 +1,4 @@
-[**Xandeum Web3 Library v0.5.0**](../README.md)
+[**Xandeum Web3 Library v0.6.0**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **armageddon**(`fsid`, `wallet`): `Promise`\<`Transaction`\>
 
-Defined in: [armageddon.ts:13](https://github.com/Xandeum/xandeum-web3.js/blob/ingolstadt/src/armageddon.ts#L13)
+Defined in: [armageddon.ts:13](https://github.com/Xandeum/xandeum-web3.js/blob/stuttgart/src/armageddon.ts#L13)
 
 Constructs a Solana transaction that triggers the "armageddon" instruction
 on the specified file system (fsid).
