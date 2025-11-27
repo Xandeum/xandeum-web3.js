@@ -1,4 +1,4 @@
-[**Xandeum Web3 Library v1.12.0**](../README.md)
+[**Xandeum Web3 Library v0.4.0**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **bigbang**(`wallet`): `Promise`\<`Transaction`\>
 
-Defined in: [bigbang.ts:10](https://github.com/Xandeum/xandeum-web3.js/blob/master/src/bigbang.ts#L10)
+Defined in: [bigbang.ts:11](https://github.com/Xandeum/xandeum-web3.js/blob/herrenberg/src/bigbang.ts#L11)
 
 Constructs a Solana transaction that triggers the "bigbang" instruction and create new file system.
 

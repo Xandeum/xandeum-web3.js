@@ -1,4 +1,4 @@
-[**Xandeum Web3 Library v1.12.0**](../README.md)
+[**Xandeum Web3 Library v0.4.0**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **getMetadata**(`connection`, `path`): `Promise`\<`any`\>
 
-Defined in: [getMetadata.ts:26](https://github.com/Xandeum/xandeum-web3.js/blob/master/src/getMetadata.ts#L26)
+Defined in: [getMetadata.ts:26](https://github.com/Xandeum/xandeum-web3.js/blob/herrenberg/src/getMetadata.ts#L26)
 
 Sends a JSON-RPC request to the Xandeum RPC endpoint to retrieve metadata
 about a file or directory at the given path.

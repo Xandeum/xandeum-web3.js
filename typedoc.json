@@ -15,7 +15,7 @@
     "excludeInternal": true,
     "excludeNotDocumented": false,
     "gitRemote": "origin",
-    "gitRevision": "master",
+    "gitRevision": "herrenberg",
     "sourceLinkTemplate": "https://github.com/Xandeum/xandeum-web3.js/blob/{gitRevision}/{path}#L{line}",
     "visibilityFilters": {
       "protected": false,
