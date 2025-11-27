@@ -11,7 +11,6 @@ export * from "./removeDirectory";
 export * from "./copyPath";
 export * from "./move";
 export * from "./getXandeumResult";
-export * from "./assignCoowner";
 export {exists } from "./exists";
 export {listDirectoryEntry} from "./listDirectoryEntery";
 export {getMetadata} from "./getMetadata";
