@@ -31,11 +31,16 @@
 * [peek](functions/peek.md)
 * [poke](functions/poke.md)
 
+### Search & Query
+
+* [find](functions/find.md)
+
 ### Metadata & Utilities
 
 * [exists](functions/exists.md)
 * [getMetadata](functions/getMetadata.md)
 * [getXandeumResult](functions/getXandeumResult.md)
+* [assignCoowner](functions/assignCoowner.md)
 
 ### WebSocket Functions
 

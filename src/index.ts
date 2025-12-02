@@ -15,3 +15,4 @@ export * from "./assignCoowner";
 export {exists } from "./exists";
 export {listDirectoryEntry} from "./listDirectoryEntery";
 export {getMetadata} from "./getMetadata";
+export {find} from "./find";

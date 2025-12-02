@@ -22,7 +22,7 @@ export interface RpcRequest {
  *          typically including a `result` array containing directory entry objects.
  */
 
-export async function listDirectoryEntry (
+export async function find (
   connection: Connection,
   path: string,
   query: string,
