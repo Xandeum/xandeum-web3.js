@@ -1,4 +1,4 @@
-[**Xandeum Web3 Library v0.8.0**](../README.md)
+[**Xandeum Web3 Library v0.8.1**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **find**(`connection`, `path`, `query`): `Promise`\<`any`\>
 
-Defined in: [find.ts:25](https://github.com/Xandeum/xandeum-web3.js/blob/master/src/find.ts#L25)
+Defined in: [find.ts:25](https://github.com/Xandeum/xandeum-web3.js/blob/reinheim/src/find.ts#L25)
 
 Sends a JSON-RPC request to the Xandeum RPC endpoint to search for a file or directory
 within a specified path.

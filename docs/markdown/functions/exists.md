@@ -1,4 +1,4 @@
-[**Xandeum Web3 Library v0.8.0**](../README.md)
+[**Xandeum Web3 Library v0.8.1**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **exists**(`connection`, `path`): `Promise`\<`any`\>
 
-Defined in: [exists.ts:23](https://github.com/Xandeum/xandeum-web3.js/blob/master/src/exists.ts#L23)
+Defined in: [exists.ts:23](https://github.com/Xandeum/xandeum-web3.js/blob/reinheim/src/exists.ts#L23)
 
 Sends a JSON-RPC request to the Xandeum RPC endpoint to check if a file or directory exists.
 

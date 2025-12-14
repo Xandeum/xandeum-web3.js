@@ -1,4 +1,4 @@
-[**Xandeum Web3 Library v0.8.0**](../README.md)
+[**Xandeum Web3 Library v0.8.1**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **peek**(`fsid`, `path`, `startPosition`, `endPosition`, `wallet`): `Promise`\<`Transaction`\>
 
-Defined in: [peek.ts:20](https://github.com/Xandeum/xandeum-web3.js/blob/master/src/peek.ts#L20)
+Defined in: [peek.ts:20](https://github.com/Xandeum/xandeum-web3.js/blob/reinheim/src/peek.ts#L20)
 
 Constructs a Solana transaction to perform a "peek" operation on a file within a file system.
 

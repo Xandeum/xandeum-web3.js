@@ -1,4 +1,4 @@
-[**Xandeum Web3 Library v0.8.0**](../README.md)
+[**Xandeum Web3 Library v0.8.1**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **copyPath**(`fsid`, `srcPath`, `destPath`, `wallet`): `Promise`\<`Transaction`\>
 
-Defined in: [copyPath.ts:18](https://github.com/Xandeum/xandeum-web3.js/blob/master/src/copyPath.ts#L18)
+Defined in: [copyPath.ts:18](https://github.com/Xandeum/xandeum-web3.js/blob/reinheim/src/copyPath.ts#L18)
 
 Constructs a Solana transaction to copy a file or directory from one  path to another.
 

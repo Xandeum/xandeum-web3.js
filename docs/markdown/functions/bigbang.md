@@ -1,4 +1,4 @@
-[**Xandeum Web3 Library v0.8.0**](../README.md)
+[**Xandeum Web3 Library v0.8.1**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **bigbang**(`replica_count`, `wallet`): `Promise`\<`Transaction`\>
 
-Defined in: [bigbang.ts:12](https://github.com/Xandeum/xandeum-web3.js/blob/master/src/bigbang.ts#L12)
+Defined in: [bigbang.ts:12](https://github.com/Xandeum/xandeum-web3.js/blob/reinheim/src/bigbang.ts#L12)
 
 Constructs a Solana transaction that triggers the "bigbang" instruction and create new file system.
 
@@ -18,7 +18,7 @@ Constructs a Solana transaction that triggers the "bigbang" instruction and crea
 
 `string`
 
-A stringified integer representing the number of replicas for the new file system.
+A stringified integer representing the number of replicas for the new file system. Must be 2 or greater. The total number of copies will be replica_count + 1 (one original plus the replicas).
 
 ### wallet
 

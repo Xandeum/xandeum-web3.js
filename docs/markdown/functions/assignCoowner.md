@@ -1,4 +1,4 @@
-[**Xandeum Web3 Library v0.8.0**](../README.md)
+[**Xandeum Web3 Library v0.8.1**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **assignCoowner**(`fsid`, `path`, `coowner`, `wallet`): `Promise`\<`Transaction`\>
 
-Defined in: [assignCoowner.ts:15](https://github.com/Xandeum/xandeum-web3.js/blob/master/src/assignCoowner.ts#L15)
+Defined in: [assignCoowner.ts:15](https://github.com/Xandeum/xandeum-web3.js/blob/reinheim/src/assignCoowner.ts#L15)
 
 Constructs a Solana transaction to assign a co-owner to a file or directory
 identified by a file system ID (`fsid`).
