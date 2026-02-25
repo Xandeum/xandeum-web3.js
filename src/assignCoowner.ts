@@ -1,6 +1,7 @@
 import { Transaction, TransactionInstruction, PublicKey } from '@solana/web3.js'
 import { programId } from './const'
 import BN from 'bn.js'
+import { getFeeDistributorPda } from './helpers.js'
 
 /**
  * Constructs a Solana transaction to assign a co-owner to a file or directory
@@ -20,16 +21,22 @@ export async function assignCoowner (
 ): Promise<Transaction> {
   const rest = Buffer.from(`${path}\0${coowner.toString()}`, 'utf-8')
   const instructionData = Buffer.concat([
+    Buffer.from(Int8Array.from([0]).buffer),
     Buffer.from(Int8Array.from([14]).buffer),
     Buffer.from(Uint8Array.of(...new BN(fsid).toArray('le', 8))),
     rest
   ])
-
+  let feeDistributorPda = getFeeDistributorPda()
   const instruction = new TransactionInstruction({
     keys: [
       {
         pubkey: wallet,
         isSigner: true,
+        isWritable: true
+      },
+      {
+        pubkey: feeDistributorPda.pda,
+        isSigner: false,
         isWritable: true
       }
     ],

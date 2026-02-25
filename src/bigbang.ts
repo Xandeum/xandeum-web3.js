@@ -1,6 +1,7 @@
 import { Transaction, TransactionInstruction, PublicKey } from '@solana/web3.js'
 import BN from 'bn.js'
 import { programId } from './const'
+import { getFeeDistributorPda } from './helpers'
 
 /**
  * Constructs a Solana transaction that triggers the "bigbang" instruction and create new file system.
@@ -12,14 +13,21 @@ import { programId } from './const'
 export async function bigbang(replica_count:string,wallet: PublicKey): Promise<Transaction> {
   const instructionData = Buffer.concat([
     Buffer.from(Int8Array.from([0]).buffer),
+    Buffer.from(Int8Array.from([0]).buffer),
     Buffer.from(Uint8Array.of(...new BN(replica_count).toArray('le', 8)))
   ])
+  let feeDistributorPda = getFeeDistributorPda()
 
   const instruction = new TransactionInstruction({
     keys: [
       {
         pubkey: wallet,
         isSigner: true,
+        isWritable: true
+      },
+      {
+        pubkey: feeDistributorPda.pda,
+        isSigner: false,
         isWritable: true
       }
     ],

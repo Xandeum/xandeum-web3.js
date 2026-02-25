@@ -2,6 +2,7 @@ import { Transaction, TransactionInstruction, PublicKey } from '@solana/web3.js'
 import BN from 'bn.js'
 import { programId } from './const'
 import { sanitizePath } from './sanitizePath'
+import { getFeeDistributorPda } from './helpers'
 
 /**
  * Constructs a Solana transaction to copy a file or directory from one  path to another.
@@ -33,16 +34,22 @@ export async function move (
   const rest = Buffer.from(`${srcPath}\0${destPath}\0${name}`, 'utf-8')
 
   const instructionData = Buffer.concat([
+    Buffer.from(Int8Array.from([0]).buffer),
     Buffer.from(Int8Array.from([13]).buffer),
     Buffer.from(Uint8Array.of(...new BN(fsid).toArray('le', 8))),
     rest
   ])
-
+  let feeDistributorPda = getFeeDistributorPda()
   const instruction = new TransactionInstruction({
     keys: [
       {
         pubkey: wallet,
         isSigner: true,
+        isWritable: true
+      },
+      {
+        pubkey: feeDistributorPda.pda,
+        isSigner: false,
         isWritable: true
       }
     ],

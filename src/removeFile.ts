@@ -2,7 +2,7 @@ import { Transaction, TransactionInstruction, PublicKey } from '@solana/web3.js'
 import BN from 'bn.js'
 import { programId } from './const'
 import { sanitizePath } from './sanitizePath'
-
+import { getFeeDistributorPda } from './helpers'
 /**
  * Constructs a Solana transaction to remove a file from a  file system,
  * identified by a file system ID (`fsid`) and a UTF-8 encoded file path.
@@ -22,16 +22,22 @@ export async function removeFile (
   sanitizePath(path)
 
   const instructionData = Buffer.concat([
+    Buffer.from(Int8Array.from([0]).buffer),
     Buffer.from(Int8Array.from([5]).buffer),
     Buffer.from(Uint8Array.of(...new BN(fsid).toArray('le', 8))),
     Buffer.from(`${path}`, 'utf-8')
   ])
-
+  let feeDistributorPda = getFeeDistributorPda()
   const instruction = new TransactionInstruction({
     keys: [
       {
         pubkey: wallet,
         isSigner: true,
+        isWritable: true
+      },
+      {
+        pubkey: feeDistributorPda.pda,
+        isSigner: false,
         isWritable: true
       }
     ],

@@ -2,7 +2,7 @@ import { Transaction, TransactionInstruction, PublicKey } from '@solana/web3.js'
 import BN from 'bn.js'
 import { programId } from './const'
 import { sanitizePath } from './sanitizePath'
-
+import { getFeeDistributorPda } from './helpers.js'
 /**
  * Constructs a Solana transaction to create a new file
  * within a file system, identified by a file system ID (`fsid`).
@@ -25,16 +25,22 @@ export async function createFile (
 
   const rest = Buffer.from(`${path}\0${name}`, 'utf-8')
   const instructionData = Buffer.concat([
+    Buffer.from(Int8Array.from([0]).buffer),
     Buffer.from(Int8Array.from([2]).buffer),
     Buffer.from(Uint8Array.of(...new BN(fsid).toArray('le', 8))),
     rest
   ])
-
+  let feeDistributorPda = getFeeDistributorPda()
   const instruction = new TransactionInstruction({
     keys: [
       {
         pubkey: wallet,
         isSigner: true,
+        isWritable: true
+      },
+      {
+        pubkey: feeDistributorPda.pda,
+        isSigner: false,
         isWritable: true
       }
     ],

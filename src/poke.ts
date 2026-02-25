@@ -2,6 +2,7 @@ import { Transaction, TransactionInstruction, PublicKey } from '@solana/web3.js'
 import BN from 'bn.js'
 import { programId } from './const'
 import { sanitizePath } from './sanitizePath'
+import { getFeeDistributorPda } from './helpers'
 
 /**
  * Constructs a Solana transaction to perform a poke\operation, which writes data
@@ -30,13 +31,14 @@ export async function poke (
   // Encode the path length as an 8-byte little-endian unsigned integer
   const pathLengthBuffer = Buffer.from(Uint8Array.of(...new BN(pathBuffer.length).toArray('le', 8)))
   const instructionData = Buffer.concat([
+    Buffer.from(Int8Array.from([0]).buffer),
     Buffer.from(Int8Array.from([4]).buffer),
     Buffer.from(Uint8Array.of(...new BN(fsid).toArray('le', 8))),
     Buffer.from(Uint8Array.of(...new BN(position).toArray('le', 8))),
     pathLengthBuffer,
     pathBuffer
   ])
-
+  let feeDistributorPda = getFeeDistributorPda()
   const instruction = new TransactionInstruction({
     keys: [
       {
@@ -48,6 +50,11 @@ export async function poke (
         pubkey: dataKey,
         isSigner: false,
         isWritable: false
+      },
+      {
+        pubkey: feeDistributorPda.pda,
+        isSigner: false,
+        isWritable: true
       }
     ],
     programId: new PublicKey(programId),
