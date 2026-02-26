@@ -1,4 +1,4 @@
-import { Transaction, TransactionInstruction, PublicKey } from '@solana/web3.js'
+import { Transaction, TransactionInstruction, PublicKey, SystemProgram } from '@solana/web3.js'
 import BN from 'bn.js'
 import { programId } from './const'
 import { sanitizePath } from './sanitizePath'
@@ -20,11 +20,21 @@ export async function removeDirectory (
   wallet: PublicKey
 ): Promise<Transaction> {
   sanitizePath(path)
-  const instructionData = Buffer.concat([
-    Buffer.from(Int8Array.from([0]).buffer),
-    Buffer.from(Int8Array.from([7]).buffer),
-    Buffer.from(Uint8Array.of(...new BN(fsid).toArray('le', 8))),
+  // inner_data: [7u8 (operation), fsid as u64 LE, path]
+  const innerData = Buffer.concat([
+    Buffer.from([7]),
+    Buffer.from(new BN(fsid).toArray('le', 8)),
     Buffer.from(`${path}`, 'utf-8')
+  ])
+
+  // wrap_storage_tx: [0u8, inner_data.len() as u32 LE, inner_data]
+  const innerLen = Buffer.alloc(4)
+  innerLen.writeUInt32LE(innerData.length)
+
+  const instructionData = Buffer.concat([
+    Buffer.from([0]),
+    innerLen,
+    innerData
   ])
   let feeDistributorPda = getFeeDistributorPda()
   const instruction = new TransactionInstruction({
@@ -38,6 +48,11 @@ export async function removeDirectory (
         pubkey: feeDistributorPda.pda,
         isSigner: false,
         isWritable: true
+      },
+      {
+        pubkey: SystemProgram.programId,
+        isSigner: false,
+        isWritable: false
       }
     ],
     programId: new PublicKey(programId),

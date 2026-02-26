@@ -1,4 +1,4 @@
-import { Transaction, TransactionInstruction, PublicKey } from '@solana/web3.js'
+import { Transaction, TransactionInstruction, PublicKey, SystemProgram } from '@solana/web3.js'
 import BN from 'bn.js'
 import { programId } from './const.js'
 import { getFeeDistributorPda } from './helpers.js'
@@ -15,10 +15,20 @@ export async function armageddon (
   fsid: string,
   wallet: PublicKey
 ): Promise<Transaction> {
+  // inner_data: [1u8 (operation), fsid as u64 LE]
+  const innerData = Buffer.concat([
+    Buffer.from([1]),
+    Buffer.from(new BN(fsid).toArray('le', 8))
+  ])
+
+  // wrap_storage_tx: [0u8, inner_data.len() as u32 LE, inner_data]
+  const innerLen = Buffer.alloc(4)
+  innerLen.writeUInt32LE(innerData.length)
+
   const instructionData = Buffer.concat([
-    Buffer.from(Int8Array.from([0]).buffer),
-    Buffer.from(Int8Array.from([1]).buffer),
-    Buffer.from(Uint8Array.of(...new BN(fsid).toArray('le', 8)))
+    Buffer.from([0]),
+    innerLen,
+    innerData
   ])
   let feeDistributorPda = getFeeDistributorPda()
 
@@ -33,6 +43,11 @@ export async function armageddon (
         pubkey: feeDistributorPda.pda,
         isSigner: false,
         isWritable: true
+      },
+      {
+        pubkey: SystemProgram.programId,
+        isSigner: false,
+        isWritable: false
       }
     ],
     programId: new PublicKey(programId),

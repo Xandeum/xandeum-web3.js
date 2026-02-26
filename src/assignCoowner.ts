@@ -1,4 +1,4 @@
-import { Transaction, TransactionInstruction, PublicKey } from '@solana/web3.js'
+import { Transaction, TransactionInstruction, PublicKey, SystemProgram } from '@solana/web3.js'
 import { programId } from './const'
 import BN from 'bn.js'
 import { getFeeDistributorPda } from './helpers.js'
@@ -20,11 +20,22 @@ export async function assignCoowner (
   wallet: PublicKey
 ): Promise<Transaction> {
   const rest = Buffer.from(`${path}\0${coowner.toString()}`, 'utf-8')
-  const instructionData = Buffer.concat([
-    Buffer.from(Int8Array.from([0]).buffer),
-    Buffer.from(Int8Array.from([14]).buffer),
-    Buffer.from(Uint8Array.of(...new BN(fsid).toArray('le', 8))),
+
+  // inner_data: [14u8 (operation), fsid as u64 LE, path\0coowner]
+  const innerData = Buffer.concat([
+    Buffer.from([14]),
+    Buffer.from(new BN(fsid).toArray('le', 8)),
     rest
+  ])
+
+  // wrap_storage_tx: [0u8, inner_data.len() as u32 LE, inner_data]
+  const innerLen = Buffer.alloc(4)
+  innerLen.writeUInt32LE(innerData.length)
+
+  const instructionData = Buffer.concat([
+    Buffer.from([0]),
+    innerLen,
+    innerData
   ])
   let feeDistributorPda = getFeeDistributorPda()
   const instruction = new TransactionInstruction({
@@ -38,6 +49,11 @@ export async function assignCoowner (
         pubkey: feeDistributorPda.pda,
         isSigner: false,
         isWritable: true
+      },
+      {
+        pubkey: SystemProgram.programId,
+        isSigner: false,
+        isWritable: false
       }
     ],
     programId: new PublicKey(programId),

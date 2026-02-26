@@ -1,4 +1,4 @@
-import { Transaction, TransactionInstruction, PublicKey } from '@solana/web3.js'
+import { Transaction, TransactionInstruction, PublicKey, SystemProgram } from '@solana/web3.js'
 import BN from 'bn.js'
 import { programId } from './const'
 import { getFeeDistributorPda } from './helpers'
@@ -11,10 +11,18 @@ import { getFeeDistributorPda } from './helpers'
  * @returns A Promise that resolves to a Solana `Transaction` object containing the bigbang instruction.
  */
 export async function bigbang(replica_count:string,wallet: PublicKey): Promise<Transaction> {
+  const innerData = Buffer.concat([
+    Buffer.from([0]),
+    Buffer.from(new BN(replica_count).toArray('le', 8))
+  ])
+
+  const innerLen = Buffer.alloc(4)
+  innerLen.writeUInt32LE(innerData.length)
+
   const instructionData = Buffer.concat([
-    Buffer.from(Int8Array.from([0]).buffer),
-    Buffer.from(Int8Array.from([0]).buffer),
-    Buffer.from(Uint8Array.of(...new BN(replica_count).toArray('le', 8)))
+    Buffer.from([0]),
+    innerLen,
+    innerData
   ])
   let feeDistributorPda = getFeeDistributorPda()
 
@@ -29,6 +37,11 @@ export async function bigbang(replica_count:string,wallet: PublicKey): Promise<T
         pubkey: feeDistributorPda.pda,
         isSigner: false,
         isWritable: true
+      },
+      {
+        pubkey: SystemProgram.programId,
+        isSigner: false,
+        isWritable: false
       }
     ],
     programId: new PublicKey(programId),

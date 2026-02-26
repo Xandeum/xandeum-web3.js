@@ -15,7 +15,7 @@ export const PULSE_DURATION_SECONDS = 15
 /**
  * Number of pulses in one yuga
  */
-export const PULSES_PER_YUGA = 16384
+export const PULSES_PER_YUGA = 100
 
 /**
  * Duration of one yuga in seconds (16384 * 15 = 245,760 seconds ≈ 2.84 days)

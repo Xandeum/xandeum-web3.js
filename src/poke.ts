@@ -1,4 +1,4 @@
-import { Transaction, TransactionInstruction, PublicKey } from '@solana/web3.js'
+import { Transaction, TransactionInstruction, PublicKey, SystemProgram } from '@solana/web3.js'
 import BN from 'bn.js'
 import { programId } from './const'
 import { sanitizePath } from './sanitizePath'
@@ -29,14 +29,25 @@ export async function poke (
   // Encode the path as UTF-8
   const pathBuffer = Buffer.from(path, 'utf-8')
   // Encode the path length as an 8-byte little-endian unsigned integer
-  const pathLengthBuffer = Buffer.from(Uint8Array.of(...new BN(pathBuffer.length).toArray('le', 8)))
-  const instructionData = Buffer.concat([
-    Buffer.from(Int8Array.from([0]).buffer),
-    Buffer.from(Int8Array.from([4]).buffer),
-    Buffer.from(Uint8Array.of(...new BN(fsid).toArray('le', 8))),
-    Buffer.from(Uint8Array.of(...new BN(position).toArray('le', 8))),
+  const pathLengthBuffer = Buffer.from(new BN(pathBuffer.length).toArray('le', 8))
+
+  // inner_data: [4u8 (operation), fsid as u64 LE, position as u64 LE, pathLength as u64 LE, path]
+  const innerData = Buffer.concat([
+    Buffer.from([4]),
+    Buffer.from(new BN(fsid).toArray('le', 8)),
+    Buffer.from(new BN(position).toArray('le', 8)),
     pathLengthBuffer,
     pathBuffer
+  ])
+
+  // wrap_storage_tx: [0u8, inner_data.len() as u32 LE, inner_data]
+  const innerLen = Buffer.alloc(4)
+  innerLen.writeUInt32LE(innerData.length)
+
+  const instructionData = Buffer.concat([
+    Buffer.from([0]),
+    innerLen,
+    innerData
   ])
   let feeDistributorPda = getFeeDistributorPda()
   const instruction = new TransactionInstruction({
@@ -55,6 +66,11 @@ export async function poke (
         pubkey: feeDistributorPda.pda,
         isSigner: false,
         isWritable: true
+      },
+      {
+        pubkey: SystemProgram.programId,
+        isSigner: false,
+        isWritable: false
       }
     ],
     programId: new PublicKey(programId),
