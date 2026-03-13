@@ -1,8 +1,9 @@
-import { Transaction, TransactionInstruction, PublicKey, SystemProgram } from '@solana/web3.js'
+import { Transaction, TransactionInstruction, PublicKey } from '@solana/web3.js'
 import BN from 'bn.js'
-import { programId } from './const'
+import { programId, TOKEN_PROGRAM_ID } from './const'
 import { sanitizePath } from './sanitizePath'
-import { getFeeDistributorPda } from './helpers'
+import { getFeeDistributorPda, getAssociatedTokenAddressWithProgramIds, buildInstructionData } from './helpers'
+
 /**
  * Constructs a Solana transaction to rename (or move) a file or directory
  * within a file system, based on a provided file system ID (`fsid`).
@@ -34,16 +35,11 @@ export async function renamePath (
     rest
   ])
 
-  // wrap_storage_tx: [0u8, inner_data.len() as u32 LE, inner_data]
-  const innerLen = Buffer.alloc(4)
-  innerLen.writeUInt32LE(innerData.length)
-
-  const instructionData = Buffer.concat([
-    Buffer.from([0]),
-    innerLen,
-    innerData
-  ])
+  const instructionData = buildInstructionData(innerData)
   let feeDistributorPda = getFeeDistributorPda()
+  const payerAta = getAssociatedTokenAddressWithProgramIds(wallet)
+  const feeAta = getAssociatedTokenAddressWithProgramIds(feeDistributorPda.pda)
+
   const instruction = new TransactionInstruction({
     keys: [
       {
@@ -57,7 +53,17 @@ export async function renamePath (
         isWritable: true
       },
       {
-        pubkey: SystemProgram.programId,
+        pubkey: payerAta.ata,
+        isSigner: false,
+        isWritable: true
+      },
+      {
+        pubkey: feeAta.ata,
+        isSigner: false,
+        isWritable: true
+      },
+      {
+        pubkey: TOKEN_PROGRAM_ID,
         isSigner: false,
         isWritable: false
       }

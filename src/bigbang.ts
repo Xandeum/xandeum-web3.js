@@ -1,53 +1,52 @@
-import { Transaction, TransactionInstruction, PublicKey, SystemProgram } from '@solana/web3.js'
-import BN from 'bn.js'
-import { programId } from './const'
-import { getFeeDistributorPda } from './helpers'
+import { Transaction, TransactionInstruction, PublicKey } from '@solana/web3.js'
+import { programId, TOKEN_PROGRAM_ID } from './const'
+import { getFeeDistributorPda, getAssociatedTokenAddressWithProgramIds, u64ToLeBytes, buildInstructionData } from './helpers'
 
 /**
- * Constructs a Solana transaction that triggers the "bigbang" instruction and create new file system.
+ * Constructs a Solana transaction that triggers the "bigbang" instruction and creates a new file system.
  *
+ * @param replicaCount - The number of replicas for the new file system. Must be 2 or greater. The total number of copies will be replicaCount + 1 (one original plus the replicas).
  * @param wallet - The public key of the wallet that will sign and authorize the transaction.
- * @param replica_count - A stringified integer representing the number of replicas for the new file system. Must be 2 or greater. The total number of copies will be replica_count + 1 (one original plus the replicas).
  * @returns A Promise that resolves to a Solana `Transaction` object containing the bigbang instruction.
  */
-export async function bigbang(replica_count:string,wallet: PublicKey): Promise<Transaction> {
-  const innerData = Buffer.concat([
-    Buffer.from([0]),
-    Buffer.from(new BN(replica_count).toArray('le', 8))
-  ])
-
-  const innerLen = Buffer.alloc(4)
-  innerLen.writeUInt32LE(innerData.length)
-
-  const instructionData = Buffer.concat([
-    Buffer.from([0]),
-    innerLen,
-    innerData
-  ])
-  let feeDistributorPda = getFeeDistributorPda()
+export async function bigbang(replicaCount: number, wallet: PublicKey): Promise<Transaction> {
+  const feeDistributorPda = getFeeDistributorPda();
+  const payerAta = getAssociatedTokenAddressWithProgramIds(wallet);
+  const feeAta = getAssociatedTokenAddressWithProgramIds(feeDistributorPda.pda);
+  const innerData = Buffer.concat([Buffer.from([0]), u64ToLeBytes(replicaCount)]);
+  const instructionData = buildInstructionData(innerData);
 
   const instruction = new TransactionInstruction({
     keys: [
       {
         pubkey: wallet,
         isSigner: true,
-        isWritable: true
+        isWritable: true,
       },
       {
         pubkey: feeDistributorPda.pda,
         isSigner: false,
-        isWritable: true
+        isWritable: true,
       },
       {
-        pubkey: SystemProgram.programId,
+        pubkey: payerAta.ata,
         isSigner: false,
-        isWritable: false
-      }
+        isWritable: true,
+      },
+      {
+        pubkey: feeAta.ata,
+        isSigner: false,
+        isWritable: true,
+      },
+      {
+        pubkey: TOKEN_PROGRAM_ID,
+        isSigner: false,
+        isWritable: false,
+      },
     ],
     programId: new PublicKey(programId),
-    data: instructionData
-  })
+    data: instructionData,
+  });
 
-  const tx = new Transaction().add(instruction)
-  return tx
+  return new Transaction().add(instruction);
 }

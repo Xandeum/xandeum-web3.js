@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js'
-import { programId } from './const'
+import { programId, TOKEN_PROGRAM_ID, ATA_PROGRAM_ID, TOKEN_MINT_ADDRESS } from './const'
 import BN from 'bn.js'
 
 /**
@@ -68,6 +68,53 @@ export function getCurrentYuga(): number {
  * console.log('Bump seed:', bump)
  * ```
  */
+/**
+ * Derives the Associated Token Address (ATA) for a given wallet using custom program IDs.
+ * 
+ * @param walletAddress - The public key of the wallet
+ * @returns An object containing the ATA public key and bump seed
+ */
+export function getAssociatedTokenAddressWithProgramIds(walletAddress: PublicKey): { ata: PublicKey; bump: number } {
+  const [ata, bump] = PublicKey.findProgramAddressSync(
+    [
+      walletAddress.toBuffer(),
+      TOKEN_PROGRAM_ID.toBuffer(),
+      TOKEN_MINT_ADDRESS.toBuffer(),
+    ],
+    ATA_PROGRAM_ID
+  );
+  return { ata, bump };
+}
+
+/**
+ * Converts a u64 value to little-endian bytes.
+ * 
+ * @param value - The value to convert (number)
+ * @returns A Buffer containing the 8-byte little-endian representation
+ */
+export function u64ToLeBytes(value: number): Buffer {
+  const bn = new BN(value);
+  if (bn.isNeg() || bn.byteLength() > 8) {
+    throw new Error(`u64 out of range: ${value}`);
+  }
+  return Buffer.from(bn.toArray('le', 8));
+}
+
+/**
+ * Builds the instruction data buffer for a given inner data payload.
+ * Allocates a fixed 33-byte buffer, sets the first byte to 0,
+ * and copies the inner data starting at offset 1.
+ * 
+ * @param innerData - The inner data buffer to embed in the instruction
+ * @returns A 33-byte Buffer containing the instruction data
+ */
+export function buildInstructionData(innerData: Buffer): Buffer {
+  const instructionData = Buffer.alloc(33, 0);
+  instructionData[0] = 0;
+  innerData.copy(instructionData, 1);
+  return instructionData;
+}
+
 export function getFeeDistributorPda(): { pda: PublicKey; bump: number } {
   const yuga = getCurrentYuga()
   

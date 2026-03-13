@@ -1,8 +1,8 @@
-import { Transaction, TransactionInstruction, PublicKey, SystemProgram } from '@solana/web3.js'
+import { Transaction, TransactionInstruction, PublicKey } from '@solana/web3.js'
 import BN from 'bn.js'
-import { programId } from './const'
+import { programId, TOKEN_PROGRAM_ID } from './const'
 import { sanitizePath } from './sanitizePath'
-import { getFeeDistributorPda } from './helpers.js'
+import { getFeeDistributorPda, getAssociatedTokenAddressWithProgramIds, buildInstructionData } from './helpers'
 
 /**
  * Constructs a Solana transaction to create a new directory within a  file system.
@@ -10,7 +10,7 @@ import { getFeeDistributorPda } from './helpers.js'
  * @param fsid - A numeric filesystem identifier used to scope the directory creation.
  * @param path - The parent path where the directory should be created (e.g., `/documents`).
  * @param name - The name of the new directory (e.g., `reports`).
- * @param wallet - The signer’s public key that authorizes the transaction.
+ * @param wallet - The signer's public key that authorizes the transaction.
  * @returns A Promise that resolves to a Solana `Transaction` object containing the createDirectory instruction.
  * @throws Will throw an error if `path` or `name` contains invalid characters.@throws Will throw if the combined path is invalid (non-alphanumeric or unsupported characters).
  */
@@ -33,16 +33,11 @@ export async function createDirectory (
     rest
   ])
 
-  // wrap_storage_tx: [0u8, inner_data.len() as u32 LE, inner_data]
-  const innerLen = Buffer.alloc(4)
-  innerLen.writeUInt32LE(innerData.length)
-
-  const instructionData = Buffer.concat([
-    Buffer.from([0]),
-    innerLen,
-    innerData
-  ])
+  const instructionData = buildInstructionData(innerData)
   let feeDistributorPda = getFeeDistributorPda()
+  const payerAta = getAssociatedTokenAddressWithProgramIds(wallet)
+  const feeAta = getAssociatedTokenAddressWithProgramIds(feeDistributorPda.pda)
+
   const instruction = new TransactionInstruction({
     keys: [
       {
@@ -56,7 +51,17 @@ export async function createDirectory (
         isWritable: true
       },
       {
-        pubkey: SystemProgram.programId,
+        pubkey: payerAta.ata,
+        isSigner: false,
+        isWritable: true
+      },
+      {
+        pubkey: feeAta.ata,
+        isSigner: false,
+        isWritable: true
+      },
+      {
+        pubkey: TOKEN_PROGRAM_ID,
         isSigner: false,
         isWritable: false
       }
