@@ -1,6 +1,10 @@
 import { PublicKey } from '@solana/web3.js'
+import {
+    TOKEN_PROGRAM_ID as TOKEN_PROGRAM_ID_SOLANA,
+    ASSOCIATED_TOKEN_PROGRAM_ID,
+  } from "@solana/spl-token";
+export const TOKEN_PROGRAM_ID = TOKEN_PROGRAM_ID_SOLANA;
+export const programId = "xSHLJPXU8QW3A9kGiRoL94bksJ7ZZPY4dUwJPAT8CVK";
 
-export const programId = "GH4eE2Wuzd2cFHQgXDp4avGLA3cEiNwEBVhkGkP8Vrs3";
-export const TOKEN_PROGRAM_ID = new PublicKey("651cCwrKdzgNUBo3sUBGCahtsxzfC7yTaNounG3q3iDF");
-export const ATA_PROGRAM_ID = new PublicKey("7aRtRTerxiPxr6fpUBfs2j2ehRANmpSLRWgNPyYitaxi");
-export const TOKEN_MINT_ADDRESS = new PublicKey("BPbgHqagPnds7Rs5j7NvL8DjsJAZz1XSCQFW1mU2wigR");
+export const ATA_PROGRAM_ID = ASSOCIATED_TOKEN_PROGRAM_ID;
+export const TOKEN_MINT_ADDRESS = new PublicKey("DjtE4JJEUUPXs2dqD4YvkkLBwTxjG2wMXvDhhiQycnCk");

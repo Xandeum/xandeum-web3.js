@@ -15,7 +15,7 @@ export const PULSE_DURATION_SECONDS = 15
 /**
  * Number of pulses in one yuga
  */
-export const PULSES_PER_YUGA = 100
+export const PULSES_PER_YUGA = 16384
 
 /**
  * Duration of one yuga in seconds (16384 * 15 = 245,760 seconds ≈ 2.84 days)
@@ -25,7 +25,7 @@ export const YUGA_DURATION_SECONDS = PULSES_PER_YUGA * PULSE_DURATION_SECONDS
 /**
  * Unix timestamp (in seconds) when the first yuga started
  */
-export const YUGA_START_TIMESTAMP = 1768898445 
+export const YUGA_START_TIMESTAMP = 1773502200 
 
 /**
  * Calculates the yuga number from a given unix timestamp.
@@ -109,7 +109,7 @@ export function u64ToLeBytes(value: number): Buffer {
  * @returns A 33-byte Buffer containing the instruction data
  */
 export function buildInstructionData(innerData: Buffer): Buffer {
-  const instructionData = Buffer.alloc(33, 0);
+  const instructionData = Buffer.alloc(65, 0);
   instructionData[0] = 0;
   innerData.copy(instructionData, 1);
   return instructionData;

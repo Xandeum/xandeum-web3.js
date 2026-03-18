@@ -53,14 +53,14 @@ export async function poke (
         isWritable: true
       },
       {
-        pubkey: dataKey,
-        isSigner: false,
-        isWritable: false
-      },
-      {
         pubkey: feeDistributorPda.pda,
         isSigner: false,
         isWritable: true
+      },
+      {
+        pubkey: dataKey,
+        isSigner: false,
+        isWritable: false
       },
       {
         pubkey: payerAta.ata,
