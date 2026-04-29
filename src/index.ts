@@ -12,6 +12,8 @@ export * from "./copyPath";
 export * from "./move";
 export * from "./getXandeumResult";
 export * from "./assignCoowner";
+export * from "./bulkUpload";
+export * from "./bulkDownload";
 export {exists } from "./exists";
 export {listDirectoryEntry} from "./listDirectoryEntery";
 export {getMetadata} from "./getMetadata";
