@@ -38,10 +38,8 @@ export async function bulkUpload (
     Buffer.from(new BN(file_size).toArray('le', 8)),
     (() => {
       const hashBuf = Buffer.from(file_hash, 'hex')
-      if (hashBuf.length < 64) {
-        const padded = Buffer.alloc(64, 0)
-        hashBuf.copy(padded)
-        return padded
+      if (hashBuf.length !== 32) {
+        throw new Error(`file_hash must be exactly 32 bytes (64 hex characters), got ${hashBuf.length} bytes`)
       }
       return hashBuf
     })(),
