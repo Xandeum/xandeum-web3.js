@@ -109,7 +109,7 @@ export function u64ToLeBytes(value: number): Buffer {
  * @returns A 33-byte Buffer containing the instruction data
  */
 export function buildInstructionData(innerData: Buffer): Buffer {
-  const instructionData = Buffer.alloc(65, 0);
+  const instructionData = Buffer.alloc(128, 0);
   instructionData[0] = 0;
   innerData.copy(instructionData, 1);
   return instructionData;

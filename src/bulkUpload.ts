@@ -46,8 +46,12 @@ export async function bulkUpload (
     pathLengthBuffer,
     pathBuffer
   ])
-
+  console.log("innerData", innerData.toString('hex'));
+  console.log("innerData length", innerData.length);
+ 
   const instructionData = buildInstructionData(innerData)
+  console.log("instructionData", instructionData.toString('hex'));
+  console.log("instructionData length", instructionData.length);
   let feeDistributorPda = getFeeDistributorPda()
   const payerAta = getAssociatedTokenAddressWithProgramIds(wallet)
   const feeAta = getAssociatedTokenAddressWithProgramIds(feeDistributorPda.pda)
