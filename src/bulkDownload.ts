@@ -50,6 +50,11 @@ export async function bulkDownload (
         isWritable: true
       },
       {
+        pubkey: new PublicKey("11111111111111111111111111111111"),
+        isSigner: false,
+        isWritable: false
+      },
+      {
         pubkey: payerAta.ata,
         isSigner: false,
         isWritable: true

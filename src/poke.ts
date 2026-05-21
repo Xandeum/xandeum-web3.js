@@ -58,6 +58,11 @@ export async function poke (
         isWritable: true
       },
       {
+        pubkey: new PublicKey("11111111111111111111111111111111"),
+        isSigner: false,
+        isWritable: false
+      },
+      {
         pubkey: dataKey,
         isSigner: false,
         isWritable: false

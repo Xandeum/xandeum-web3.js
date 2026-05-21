@@ -41,10 +41,15 @@ export async function removeFile (
         isSigner: true,
         isWritable: true
       },
-      {
+      { 
         pubkey: feeDistributorPda.pda,
         isSigner: false,
         isWritable: true
+      },
+      {
+        pubkey: new PublicKey("11111111111111111111111111111111"),
+        isSigner: false,
+        isWritable: false
       },
       {
         pubkey: payerAta.ata,
